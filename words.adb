@@ -75,7 +75,7 @@ begin
       begin
 	      Line := ASU.To_Unbounded_String(Ada.Text_IO.Get_Line(File));
 	      Line := ASU.To_Unbounded_String(ACH.To_Lower(ASU.To_String(Line)));
-	      ATIO.Put_Line(ASU.To_String(Line));
+	      --ATIO.Put_Line(ASU.To_String(Line));
          Space_Position:= ASU.Index(Line, " ");
 			--ATIO.Put_Line("Antes del bucle" & Integer'Image(Space_Position));
          --Word := ASU.Head(Line, Space_Position -1);
@@ -86,7 +86,7 @@ begin
 
          while Space_Position /= 0 loop
             if Space_Position - 1 < 0 then
-					ATIO. Put_Line("palabra: " & ASU.To_String(Word));
+					--ATIO. Put_Line("palabra: " & ASU.To_String(Word));
 					Word := Line;
                WL.Add_Word(List, Word);
 					Delete_Spaces(Line, Space_Position);
@@ -94,14 +94,14 @@ begin
 					--WL.Print_All(List);
 				else
                Word := ASU.Head(Line, Space_Position -1);
-					ATIO. Put_Line("000000palabra: " & ASU.To_String(Word));
+					--ATIO. Put_Line("000000palabra: " & ASU.To_String(Word));
                WL.Add_Word(List, Word);
                Line := ASU.Tail(Line, ASU.Length(Line) - Space_Position);
 					Space_Position := ASU.Index(Line, " ");
-					ATIO.Put_Line("Space_Position dentro del bucle" &
-										 Integer'Image(Space_Position));
+					--ATIO.Put_Line("Space_Position dentro del bucle" &
+					--					 Integer'Image(Space_Position));
                Delete_Spaces(Line, Space_Position);
-					ATIO.Put("Palabras que llevo guardadas: ");
+					--ATIO.Put("Palabras que llevo guardadas: ");
 					WL.Print_All(List);
             end if;
          end loop;

@@ -17,17 +17,18 @@ package body Word_Lists is
       P_Aux: Word_List_Type;
       Found: Boolean := False;
    begin
-		if Is_Empty(List) then
+		--if Is_Empty(List) then
 			P_Aux := new Cell;
 			P_Aux.Word := Word;
    	   P_Aux.Count := P_Aux.Count + 1;
+   	   P_Aux.Next := List;
    	   List := P_Aux;
-		else
-			P_Aux := new Cell;
-			P_Aux.Word := Word;
-			P_Aux.Count := P_Aux.Count + 1;
-			List.Next := P_Aux;
-		end if;
+		--else
+		--	P_Aux := new Cell;
+		--	P_Aux.Word := Word;
+		--	P_Aux.Count := P_Aux.Count + 1;
+		--	List.Next := P_Aux;
+		--end if;
 --      while not Found and P_Aux /= Null loop
 --         P_Aux := new Cell;
 --         P_Aux.Word := Word;
