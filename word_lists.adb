@@ -3,7 +3,7 @@ with Ada.Text_IO;
 
 package body Word_Lists is
    package ATIO renames Ada.Text_IO;
-   
+   use type ASU.Unbounded_String;
    
    --Compruebo si la lista está vacía
    function Is_Empty(List: Word_List_Type) return Boolean is
@@ -29,16 +29,17 @@ package body Word_Lists is
 		--	P_Aux.Count := P_Aux.Count + 1;
 		--	List.Next := P_Aux;
 		--end if;
---      while not Found and P_Aux /= Null loop
---         P_Aux := new Cell;
---         P_Aux.Word := Word;
---         P_Aux.Count := P_Aux.Count + 1;
+      while not Found and P_Aux /= null loop
+			Found:= P_Aux.Word = Word;
+			if Found then
+	         P_Aux.Count := P_Aux.Count + 1;
 --         List.Next := P_Aux;
 --         P_Aux := List;
 --      end loop;
 --       if Found then
 --         P_Aux.Count := P_Aux.Count + 1;
---       end if;
+       	end if;
+		end loop;
    end Add_Word;
 
    --Imprime todas las palabras de la lista
