@@ -19,7 +19,6 @@ procedure Prueba is
    Finish: Boolean;
    Line: ASU.Unbounded_String;
 
-   E : Natural;
    P1 : ASU.Unbounded_String;
    Tail : ASU.Unbounded_String;
    List: WL.Word_List_Type;
@@ -32,6 +31,31 @@ procedure Prueba is
          Space_Position := ASU.Index(Line," ");
       end loop;
    end Delete_Spaces;
+
+	procedure Trocea(Line: in out ASU.Unbounded_String;
+							P1: out ASU.Unbounded_String) is
+		E: Integer;
+		Finish: Boolean;
+	begin
+		Finish := False;
+		while not Finish loop
+			E := ASU.Index(Line, " ");
+			if E /= 0 and E /= 1 then
+				P1 := ASU.Head(Line, E-1);
+				WL.Add_Word(List, P1);
+				Line := ASU.Tail(Line, ASU.Length(Line) - E);
+			elsif E = 0 then
+				P1 := ASU.Tail(Line, ASU.Length(Line) - E);
+				if ASU.To_String(P1) /= "" then
+					WL.ADD_Word(List, P1);
+				end if;
+				Finish := True;
+			elsif E = 1 then
+				ASU.Tail(Line, ASU.Length(Line) - 1);
+			end if;
+		end loop;
+	end Trocea;
+
 begin
 
    if ACL.Argument_Count /= 1 then
@@ -48,24 +72,10 @@ begin
    while not Finish loop
       begin
 	      Line := ASU.To_Unbounded_String(Ada.Text_IO.Get_Line(File));
+			--ATIO.Put_Line(Integer'Image(ASU.Length(Line)));
 	      --Ada.Text_IO.Put_Line(ASU.To_String(Line));
-	      E := ASU.Index(Line, " ");
-			Delete_Spaces(Line, E);
-			--ATIO.Put_Line("valor de E: " & Natural'Image(E));
-			if E = 0 and ASU.To_String(Line) /= "" then
-				P1 := Line;
-				WL.Add_Word(List, P1);
-				ATIO.Put_Line("palabra |" & ASU.To_String(P1) & "|");
-			else
-				while ASU.To_String(Line) /= " " and E > 0 loop
-					P1 := ASU.Head(Line, E - 1);
-					WL.Add_Word(List, P1);
-					Line := ASU.Tail(Line, ASU.Length(Line) - E);
-					E := ASU.Index(Line, " ");
-					ATIO.Put_Line("palabra |" & ASU.To_String(P1) & "|");
-					Delete_Spaces(Line, E);
-				end loop;
-			end if;
+			Trocea(Line, P1);
+	      
       exception
 	      when Ada.IO_Exceptions.End_Error =>
 	       Finish := True;

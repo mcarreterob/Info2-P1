@@ -23,7 +23,6 @@ procedure Words is
    Line: ASU.Unbounded_String;
    Word: ASU.Unbounded_String;
    List: WL.Word_List_Type;
-   Space_Position: Integer;
 
    --Creo una lista vacía
 --   function Word_List_Empty return Word_List_Type is
@@ -42,6 +41,31 @@ procedure Words is
          Space_Position := ASU.Index(Line," ");
       end loop;
    end Delete_Spaces;
+
+	--Troceo el texto del fichero
+	procedure Trocea(Line: in out ASU.Unbounded_String;
+							Word: out ASU.Unbounded_String) is
+		Space_Position: Integer;
+		Finish: Boolean;
+	begin
+		Finish := False;
+		while not Finish loop
+			Space_Position := ASU.Index(Line, " ");
+			if Space_Position /= 0 and Space_Position /= 1 then
+				Word := ASU.Head(Line, Space_Position-1);
+				WL.Add_Word(List, Word);
+				Line := ASU.Tail(Line, ASU.Length(Line) - Space_Position);
+			elsif Space_Position = 0 then
+				Word := ASU.Tail(Line, ASU.Length(Line) - Space_Position);
+				if ASU.To_String(Word) /= "" then
+					WL.ADD_Word(List, Word);
+				end if;
+				Finish := True;
+			elsif Space_Position = 1 then
+				Line := ASU.Tail(Line, ASU.Length(Line) - 1);
+			end if;
+		end loop;
+	end Trocea;
 
 begin
 
@@ -75,43 +99,16 @@ begin
       begin
 	      Line := ASU.To_Unbounded_String(Ada.Text_IO.Get_Line(File));
 	      Line := ASU.To_Unbounded_String(ACH.To_Lower(ASU.To_String(Line)));
-	      --ATIO.Put_Line(ASU.To_String(Line));
-         Space_Position:= ASU.Index(Line, " ");
-			--ATIO.Put_Line("Antes del bucle" & Integer'Image(Space_Position));
-         --Word := ASU.Head(Line, Space_Position -1);
-			--WL.Add_Word(List, Word);
-			--WL.Print_All(List);
-			--ATIO. Put_Line("palabra: " & ASU.To_String(Word));         
-			--Delete_Spaces(Line, Space_Position);
-
-         while Space_Position /= 0 loop
-            if Space_Position - 1 < 0 then
-					--ATIO. Put_Line("palabra: " & ASU.To_String(Word));
-					Word := Line;
-               WL.Add_Word(List, Word);
-					Delete_Spaces(Line, Space_Position);
-					--ATIO.Put("Palabras que llevo guardadas: ");
-					--WL.Print_All(List);
-				else
-               Word := ASU.Head(Line, Space_Position -1);
-					--ATIO. Put_Line("000000palabra: " & ASU.To_String(Word));
-               WL.Add_Word(List, Word);
-               Line := ASU.Tail(Line, ASU.Length(Line) - Space_Position);
-					Space_Position := ASU.Index(Line, " ");
-					--ATIO.Put_Line("Space_Position dentro del bucle" &
-					--					 Integer'Image(Space_Position));
-               Delete_Spaces(Line, Space_Position);
-					--ATIO.Put("Palabras que llevo guardadas: ");
-					WL.Print_All(List);
-            end if;
-         end loop;
+	      Trocea(Line, Word);
          
       exception
 	      when Ada.IO_Exceptions.End_Error =>
 	       Finish := True;
       end;
    end loop;
-   
+
+	WL.Print_All(List);	
+
    Ada.Text_IO.Close(File);
 
 exception

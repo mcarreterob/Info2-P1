@@ -10,37 +10,56 @@ package body Word_Lists is
    begin
      return List = null;
    end Is_Empty;
-   
-   --Añado palabra a la lista
+
    procedure Add_Word(List: in out Word_List_Type;
                       Word: in ASU.Unbounded_String) is
-      P_Aux: Word_List_Type;
+      P_Aux: Word_List_Type;--Creador de celdas
+		P_Aux_2: Word_List_Type;--Recorre la lista
       Found: Boolean := False;
    begin
-		--if Is_Empty(List) then
+		P_Aux := List;
+		if Is_Empty(List) then
 			P_Aux := new Cell;
 			P_Aux.Word := Word;
    	   P_Aux.Count := P_Aux.Count + 1;
    	   P_Aux.Next := List;
    	   List := P_Aux;
-		--else
-		--	P_Aux := new Cell;
-		--	P_Aux.Word := Word;
-		--	P_Aux.Count := P_Aux.Count + 1;
-		--	List.Next := P_Aux;
-		--end if;
-      while not Found and P_Aux /= null loop
-			Found:= P_Aux.Word = Word;
-			if Found then
-	         P_Aux.Count := P_Aux.Count + 1;
---         List.Next := P_Aux;
---         P_Aux := List;
---      end loop;
---       if Found then
---         P_Aux.Count := P_Aux.Count + 1;
-       	end if;
-		end loop;
+		else
+			--not Found -> Encontrado
+		   while not Found and P_Aux /= null loop
+				if P_Aux.Word = Word then
+			      P_Aux.Count := P_Aux.Count + 1;
+					Found := True;
+		    	end if;
+				P_Aux_2 := P_Aux;
+				P_Aux := P_Aux.Next;
+			end loop;
+			--Ahora not Found -> No ha sido encontrado,
+			--porque Found fue iniciado a False y cambio a True
+			if not Found then
+				P_Aux := new Cell'(Word, 1, null);
+				P_Aux_2.Next := P_Aux;
+			end if;
+		end if;
    end Add_Word;
+
+	procedure Max_Word (List: in Word_List_Type;
+	                    Word: out ASU.Unbounded_String;
+		                 Count: out Natural) is
+		P_Aux: Word_List_Type;
+	begin
+		P_Aux := List;
+		Word := P_Aux.Word;
+		Count := P_Aux.Count;
+		while P_Aux /= null loop
+			if Count < P_aux.Count then
+				Word := P_Aux.Word;
+				Count := P_Aux.Count;
+			else
+				P_Aux := P_Aux.Next;
+			end if;
+		end loop;
+	end Max_Word;
 
    --Imprime todas las palabras de la lista
    procedure Print_All (List: in Word_List_Type) is
