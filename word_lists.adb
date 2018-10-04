@@ -43,6 +43,32 @@ package body Word_Lists is
 		end if;
    end Add_Word;
 
+	procedure Search_Word (List: in Word_List_Type;
+			                 Word: in ASU.Unbounded_String;
+			                 Count: out Natural) is
+		P_Aux: Word_List_Type;
+		Searched_Word: ASU.unbounded_String;
+		Found: Boolean;
+	begin
+		P_Aux := List;
+		Found := False;
+		Count := 0;
+		while not Found and P_Aux /= null loop
+			if P_Aux.Word = Word then
+				Searched_Word := P_Aux.Word;
+				Count := P_Aux.Count;
+				Found := True;
+				ATIO.Put_Line("|" & ASU.To_String(Searched_Word)
+									& "| - " & Natural'Image(Count));
+			else
+				P_Aux := P_Aux.Next;
+			end if;
+		end loop;
+		if Found = False then
+			ATIO.Put_Line("The word you are searching is not in the list");
+		end if;
+	end Search_Word;
+
 	procedure Max_Word (List: in Word_List_Type;
 	                    Word: out ASU.Unbounded_String;
 		                 Count: out Natural) is
@@ -59,6 +85,8 @@ package body Word_Lists is
 				P_Aux := P_Aux.Next;
 			end if;
 		end loop;
+		ATIO.Put("The most frequent word: |" & ASU.To_String(Word)
+					& "| - " & Natural'Image(Count));
 	end Max_Word;
 
    --Imprime todas las palabras de la lista
