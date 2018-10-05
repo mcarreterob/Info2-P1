@@ -29,18 +29,12 @@ procedure Words is
 	Option: ASU.Unbounded_String;
 	Finish_Interactive: Boolean;
 
-   --Creo una lista vacía
---   function Word_List_Empty return Word_List_Type is
---      List: Word_List_Type;
---   begin
---      List := null;
---      return List;
---   end Word_List_Empty;
-
    --Elimino los espacios en blanco
    procedure Delete_Spaces(Line: in out ASU.Unbounded_String;
                            Space_Position: in out Integer) is
    begin
+		--Cada vez que veo un espacio, Line pasa a ser lo que hay 
+		--detrás del espacio y se vuelve a buscar Space_Position
       while Space_Position = 1 loop
          Line := ASU.Tail(Line, ASU.Length(Line) - Space_Position);
          Space_Position := ASU.Index(Line," ");
@@ -76,31 +70,42 @@ begin
 
    if ACL.Argument_Count > 2 or ACL.Argument_Count < 1 then
       raise Usage_Error;
-		raise ADA.IO_EXCEPTIONS.NAME_ERROR;
+	elsif ACL.Argument_Count = 1 then
+		if ACL.Argument(1) = "-i" then
+			raise Usage_Error;
+		else
+			File_Name := ASU.To_Unbounded_String(ACL.Argument(1));
+		end if;
+	elsif ACL.Argument_Count = 2 then
+		if ACL.Argument(1) /= "-i" then
+			raise Usage_Error;
+		else
+			File_Name := ASU.To_Unbounded_String(ACL.Argument(2));
+		end if;
    end if;
 
-	if ACL.Argument_Count = 1 then
-      File_Name := ASU.To_Unbounded_String(ACL.Argument(1));
-		ATIO.Open(File, ATIO.In_File, ASU.To_String(File_Name));
-		Finish := False;
-		--Leo el fichero y voy creando la lista
-		while not Finish loop
-		   begin
-			   Line := ASU.To_Unbounded_String(Ada.Text_IO.Get_Line(File));
-			   Line := ASU.To_Unbounded_String(ACH.To_Lower(ASU.To_String(Line)));
-			   Trocea(Line, Word);
-		   exception
-			   when Ada.IO_Exceptions.End_Error =>
-			    Finish := True;
-		   end;
-		end loop;
+	ATIO.Open(File, ATIO.In_File, ASU.To_String(File_Name));
+	Finish := False;
+	--Leo el fichero y voy creando la lista
+	while not Finish loop
+	   begin
+		   Line := ASU.To_Unbounded_String(Ada.Text_IO.Get_Line(File));
+		   Line := ASU.To_Unbounded_String(ACH.To_Lower(ASU.To_String(Line)));
+		   Trocea(Line, Word);
+	   exception
+		   when Ada.IO_Exceptions.End_Error =>
+		    Finish := True;
+	   end;
+	end loop;
 
+  	Ada.Text_IO.Close(File);
+
+	if ACL.Argument_Count = 1 then
 		ATIO.New_Line;
 		WL.Max_Word(List, Word, Count);
 		ATIO.New_Line(2);
-  		Ada.Text_IO.Close(File);
 
-	elsif ACL.Argument_Count = 2 and ACL.Argument(1) = "-i" then
+	elsif ACL.Argument_Count = 2 then
 		File_Name := ASU.To_Unbounded_String(ACL.Argument(2));
 		Finish_Interactive := False;
 		while not Finish_Interactive loop
@@ -126,7 +131,8 @@ begin
 					ATIO.Put("Word? ");
 					Word_In_Menu := ASU.To_Unbounded_String(ATIO.Get_Line);
 					Word_In_Menu := ASU.To_Unbounded_String(ACH.To_Lower(ASU.To_String(Word_In_Menu)));
-					ATIO.Put_Line("no tengo el delete hecho");
+					WL.Delete_Word(List, Word);
+					ATIO.Put_Line("|" & ASU.To_String(Word_In_Menu) & "| deleted");
 					ATIO.New_Line;
 				elsif Option = "3" then
 					ATIO.Put("Word? ");

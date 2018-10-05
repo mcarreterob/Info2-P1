@@ -1,6 +1,6 @@
 with Ada.Strings.Unbounded;
 with Ada.Text_IO;
-
+with Ada.Unchecked_Deallocation;
 package body Word_Lists is
    package ATIO renames Ada.Text_IO;
    use type ASU.Unbounded_String;
@@ -10,6 +10,10 @@ package body Word_Lists is
    begin
      return List = null;
    end Is_Empty;
+
+	procedure Free is new
+		Ada.Unchecked_Deallocation
+		(Cell, Word_List_Type);
 
    procedure Add_Word(List: in out Word_List_Type;
                       Word: in ASU.Unbounded_String) is
@@ -42,6 +46,26 @@ package body Word_Lists is
 			end if;
 		end if;
    end Add_Word;
+
+   procedure Delete_Word (List: in out Word_List_Type; 
+			                 Word: in ASU.Unbounded_String) is
+		P_Aux: Word_List_Type;
+		P_Aux_2: Word_List_Type;
+      Found: Boolean := False;
+	begin
+		P_Aux := List;
+		P_Aux_2 := P_Aux;
+		while not Found and P_Aux /= null loop
+			if P_Aux.Word = Word and P_Aux = List then
+				List := P_Aux.Next;
+				Free(P_Aux);
+				Found := True;
+			else
+				P_Aux_2 := P_Aux;
+				P_Aux := P_Aux.Next;
+			end if;
+		end loop;
+	end Delete_Word;
 
 	procedure Search_Word (List: in Word_List_Type;
 			                 Word: in ASU.Unbounded_String;
