@@ -19,9 +19,9 @@ package Word_Lists is
    procedure Add_Word (List: in out Word_List_Type; 
 		                 Word: in ASU.Unbounded_String);
    
---   procedure Delete_Word (List: in out Word_List_Type; 
---			                 Word: in ASU.Unbounded_String);
---  
+   procedure Delete_Word (List: in out Word_List_Type; 
+			                 Word: in ASU.Unbounded_String);
+  
    procedure Search_Word (List: in Word_List_Type;
 			                 Word: in ASU.Unbounded_String;
 			                 Count: out Natural);
