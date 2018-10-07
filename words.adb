@@ -131,8 +131,7 @@ begin
 					ATIO.Put("Word? ");
 					Word_In_Menu := ASU.To_Unbounded_String(ATIO.Get_Line);
 					Word_In_Menu := ASU.To_Unbounded_String(ACH.To_Lower(ASU.To_String(Word_In_Menu)));
-					WL.Delete_Word(List, Word);
-					ATIO.Put_Line("|" & ASU.To_String(Word_In_Menu) & "| deleted");
+					WL.Delete_Word(List, Word_In_Menu);
 					ATIO.New_Line;
 				elsif Option = "3" then
 					ATIO.Put("Word? ");
@@ -148,7 +147,7 @@ begin
 					Finish_Interactive := True;
 					ATIO.New_Line;
 				else
-					ATIO.Put_Line("La opción que has elegido es incorrecta");
+					ATIO.Put_Line("Your option is not correct");
 				end if;
 			end if;
 		end loop;
