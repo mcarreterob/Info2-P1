@@ -74,7 +74,7 @@ package body Word_Lists is
 		end loop;
       
 	   if not Found then
-	      ATIO.Put_Line("This word is not in the list");
+			raise Word_List_Error;
 	   end if;
 	end Delete_Word;
 
@@ -133,7 +133,8 @@ package body Word_Lists is
       P_Aux: Word_List_Type;
    begin
       if Is_Empty(List) then
-         ATIO.Put_Line("No words.");
+         --ATIO.Put_Line("No words.");
+			raise Word_List_Error;
       else
          P_Aux := List;
          while not Is_Empty(P_Aux) loop
@@ -142,5 +143,20 @@ package body Word_Lists is
             P_Aux := P_Aux.Next;
          end loop;
       end if;
-   end;
+   end Print_All;
+
+	procedure Delete_List (List: in out Word_List_Type) is
+		P_Aux : Word_List_Type;
+	begin
+      if Is_Empty(List) then
+         ATIO.Put_Line("No words.");
+      else
+         P_Aux := List;
+         while not Is_Empty(P_Aux) loop
+				List := List.Next;
+            Free(P_Aux);
+				P_Aux := List;
+         end loop;
+      end if;
+	end Delete_List;
 end;
