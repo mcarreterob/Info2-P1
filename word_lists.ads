@@ -14,7 +14,7 @@ package Word_Lists is
       Next: Word_List_Type;
    end record;
    
-   Word_List_Error: exception; 
+   Word_List_Error: exception;
    
    procedure Add_Word (List: in out Word_List_Type; 
 		                 Word: in ASU.Unbounded_String);
@@ -31,6 +31,8 @@ package Word_Lists is
 		                 Count: out Natural);
    
    procedure Print_All (List: in Word_List_Type);
+
+	procedure Delete_List (List: in out Word_List_Type);
    
 end Word_Lists;
 
