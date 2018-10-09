@@ -30,7 +30,7 @@ procedure Words is
 	Word_In_Menu: ASU.Unbounded_String;
 	Option: ASU.Unbounded_String;
 	Finish_Interactive: Boolean;
-	Nacho: Boolean:=False;
+	Variable_Aux: Boolean:=False;
 
    --Elimino los espacios en blanco
    procedure Delete_Spaces(Line: in out ASU.Unbounded_String;
@@ -105,14 +105,15 @@ begin
 	exception
 		when ADA.IO_EXCEPTIONS.NAME_ERROR =>
 		ATIO.Put_Line(ASU.To_String(File_Name) & ": File not found");
-		Nacho := True;
+		Variable_Aux := True;
 	end;
 
-	if not Nacho then
+	if not Variable_Aux then
 		if ACL.Argument_Count = 1 then
 			ATIO.New_Line;
 			WL.Max_Word(List, Word, Count);
 			ATIO.New_Line(2);
+			WL.Delete_List(List);
 		end if;
 	end if;
 
@@ -132,12 +133,13 @@ begin
 				ATIO.New_Line;
 				ATIO.Put("Your option? ");
 				Option := ASU.To_Unbounded_String(ATIO.Get_Line);
+				ATIO.New_Line;
 				if Option = "1" then
 					ATIO.Put("Word? ");
 					Word_In_Menu := ASU.To_Unbounded_String(ATIO.Get_Line);
 					Word_In_Menu := ASU.To_Unbounded_String(ACH.To_Lower(ASU.To_String(Word_In_Menu)));
 					WL.Add_Word(List, Word_In_Menu);
-					ATIO.Put_Line("Word " & ASU.To_String(Word_In_Menu) & " added");
+					ATIO.Put_Line("Word |" & ASU.To_String(Word_In_Menu) & "| added");
 					ATIO.New_Line;
 				elsif Option = "2" then
 					ATIO.Put("Word? ");
